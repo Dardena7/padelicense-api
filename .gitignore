@@ -1,0 +1,32 @@
+# Bundler
+/.bundle
+/vendor/bundle
+
+# Environment
+/.env*
+!/.env.example
+
+# Rails
+/log/*
+/tmp/*
+/storage/*
+!/log/.keep
+!/tmp/.keep
+!/storage/.keep
+!/tmp/pids/.keep
+!/tmp/storage/.keep
+
+# Credentials
+/config/master.key
+/config/credentials/*.key
+
+# PID files
+/tmp/pids/*
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp

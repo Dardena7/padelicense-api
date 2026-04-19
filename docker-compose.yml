@@ -1,0 +1,77 @@
+# Les services = les containers qui tournent ensemble
+services:
+
+  # --- PostgreSQL ---
+  # La base de données. On utilise l'image officielle, pas besoin de Dockerfile custom.
+  postgres:
+    image: postgres:16
+    environment:
+      # Le mot de passe du superuser PG. En dev c'est pas critique,
+      # en prod ce sera dans des secrets AWS.
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      # "volume nommé" : les données PG sont persistées même si le container est détruit.
+      # Sans ça, tu perds ta DB à chaque docker compose down.
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      # 5432 du container → 5432 de ta machine
+      # Pratique pour se connecter avec un outil comme pgAdmin ou psql en local
+      - "5432:5432"
+
+  # --- Redis ---
+  # Utilisé par Sidekiq comme file d'attente pour les jobs asynchrones.
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  # --- Rails API ---
+  api:
+    # "build: ." = construis l'image à partir du Dockerfile dans le dossier courant
+    build: .
+    # La commande qui lance le serveur Rails
+    # On supprime le fichier server.pid au démarrage car si Rails crash,
+    # ce fichier reste et empêche le redémarrage ("server is already running")
+    command: bash -c "rm -f tmp/pids/server.pid && rails server -b 0.0.0.0"
+    volumes:
+      # Monte ton dossier local dans le container.
+      # Quand tu modifies un fichier sur ta machine, le changement est immédiat dans le container.
+      # C'est ce qui permet le hot reload sans rebuild.
+      - .:/app
+      # Volume anonyme pour ne PAS écraser le dossier bundle du container
+      # avec celui de ta machine (qui est vide). Sans ça, les gems disparaissent.
+      - bundle_cache:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    # Ce service attend que PG et Redis soient démarrés avant de se lancer.
+    # Note : "depends_on" vérifie que le container est UP, pas que le service est READY.
+    # PG peut mettre 1-2s à accepter des connexions après le démarrage du container.
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/padelicense_development
+      REDIS_URL: redis://redis:6379/0
+      RAILS_ENV: development
+
+  # --- Sidekiq ---
+  # Même image que l'API, mais avec une commande différente.
+  # Il écoute Redis et exécute les jobs en arrière-plan.
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/padelicense_development
+      REDIS_URL: redis://redis:6379/0
+      RAILS_ENV: development
+
+# Les volumes nommés. Déclarés ici pour que Docker les crée et les gère.
+volumes:
+  postgres_data:
+  bundle_cache:
