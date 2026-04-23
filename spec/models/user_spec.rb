@@ -10,7 +10,7 @@ RSpec.describe User do
   end
 
   describe "enums" do
-    it { is_expected.to define_enum_for(:role).with_values(customer: 0, admin: 1) }
+    it { is_expected.to define_enum_for(:role).with_values(customer: "customer", admin: "admin").backed_by_column_of_type(:string) }
   end
 
   describe "factory" do
