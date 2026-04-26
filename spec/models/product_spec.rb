@@ -14,6 +14,8 @@ RSpec.describe Product do
 
   describe "associations" do
     it { is_expected.to belong_to(:category) }
+    it { is_expected.to have_many(:variants).class_name("ProductVariant").dependent(:destroy) }
+    it { is_expected.to have_many(:images).class_name("ProductImage").dependent(:destroy) }
   end
 
   describe "enums" do

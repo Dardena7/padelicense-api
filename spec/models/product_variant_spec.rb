@@ -13,6 +13,7 @@ RSpec.describe ProductVariant do
 
   describe "associations" do
     it { is_expected.to belong_to(:product) }
+    it { is_expected.to have_many(:images).class_name("ProductImage").dependent(:nullify) }
   end
 
   describe "#effective_price" do

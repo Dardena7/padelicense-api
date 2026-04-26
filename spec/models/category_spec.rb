@@ -12,6 +12,7 @@ RSpec.describe Category do
   describe "associations" do
     it { is_expected.to belong_to(:parent).class_name("Category").optional }
     it { is_expected.to have_many(:subcategories).class_name("Category").dependent(:destroy) }
+    it { is_expected.to have_many(:products).dependent(:restrict_with_error) }
   end
 
   describe "self-referential hierarchy" do

@@ -33,6 +33,12 @@ gem "rack-cors"
 gem "devise"
 gem "jwt"
 
+# API
+gem "graphql"
+
+# Authorization
+gem "pundit"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  post "/graphql", to: "graphql#execute"
   namespace :auth do
     post "signup", to: "registrations#create"
     post "login", to: "sessions#create"
