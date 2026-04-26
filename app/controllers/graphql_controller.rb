@@ -11,7 +11,7 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      current_user: current_user
+      current_user: load_current_user
     }
     result = AppSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
@@ -40,6 +40,15 @@ class GraphqlController < ApplicationController
     else
       raise ArgumentError, "Unexpected parameter: #{variables_param}"
     end
+  end
+
+  def load_current_user
+    return nil unless access_token
+
+    payload = JwtService.decode(access_token)
+    User.find_by(public_id: payload["user_id"])
+  rescue JwtService::ExpiredToken, JwtService::InvalidToken
+    nil
   end
 
   def handle_error_in_development(e)
