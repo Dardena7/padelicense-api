@@ -65,7 +65,7 @@ RSpec.describe "products query" do
 
       expect(product["name"]).to eq("Speed Pro")
       expect(product["basePriceCents"]).to eq(24990)
-      expect(product["status"]).to eq("active")
+      expect(product["status"]).to eq("ACTIVE")
       expect(product["featured"]).to be false
       expect(product["createdAt"]).to be_present
       expect(product["category"]["name"]).to eq("Rackets")

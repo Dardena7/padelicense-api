@@ -49,5 +49,11 @@ module App
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    initializer "collapse_graphql_type_dirs" do
+      Rails.autoloaders.main.collapse(
+        *Dir[Rails.root.join("app/graphql/types/*/")]
+      )
+    end
   end
 end

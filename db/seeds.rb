@@ -1,3 +1,5 @@
+return if Rails.env.test?
+
 puts "Seeding categories..."
 
 rackets = Category.find_or_create_by!(slug: "rackets") do |c|
@@ -112,7 +114,7 @@ products_data = [
     category: accessories,
     featured: false,
     description: "Pack of 3 high-absorption overgrips. Provides excellent comfort and sweat management during play."
-  },
+  }
 ]
 
 products_data.each do |data|

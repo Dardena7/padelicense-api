@@ -4,7 +4,9 @@ class User < ApplicationRecord
 
   has_many :refresh_tokens, dependent: :destroy
 
-  ROLES = [ "customer", "admin" ].freeze
+  CUSTOMER = "customer".freeze
+  ADMIN = "admin".freeze
+  ROLES = [ CUSTOMER, ADMIN ].freeze
 
   enum :role, ROLES.index_by(&:itself)
 

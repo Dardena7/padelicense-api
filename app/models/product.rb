@@ -1,5 +1,8 @@
 class Product < ApplicationRecord
-  STATUSES = [ "draft", "active", "archived" ].freeze
+  DRAFT = "draft".freeze
+  ACTIVE = "active".freeze
+  ARCHIVED = "archived".freeze
+  STATUSES = [ DRAFT, ACTIVE, ARCHIVED ].freeze
 
   belongs_to :category
   has_many :variants, class_name: "ProductVariant", dependent: :destroy
