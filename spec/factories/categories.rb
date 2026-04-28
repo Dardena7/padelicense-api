@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :category do
     name { Faker::Commerce.department }
-    slug { Faker::Internet.slug }
+    sequence(:slug) { |n| "#{Faker::Internet.slug}-#{n}" }
     description { Faker::Lorem.sentence }
 
     trait :with_parent do

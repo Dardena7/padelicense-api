@@ -10,20 +10,53 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_23_221640) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_28_131907) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "categories", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.text "description"
     t.bigint "parent_id"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["parent_id"], name: "index_categories_on_parent_id"
-    t.index ["slug"], name: "index_categories_on_slug", unique: true
+  end
+
+  create_table "category_translations", force: :cascade do |t|
+    t.bigint "category_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.string "slug"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id", "locale"], name: "index_category_translations_on_category_id_and_locale", unique: true
+    t.index ["locale", "slug"], name: "index_category_translations_on_locale_and_slug", unique: true
+  end
+
+  create_table "mobility_string_translations", force: :cascade do |t|
+    t.string "locale", null: false
+    t.string "key", null: false
+    t.string "value"
+    t.string "translatable_type"
+    t.bigint "translatable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["translatable_id", "translatable_type", "key"], name: "index_mobility_string_translations_on_translatable_attribute"
+    t.index ["translatable_id", "translatable_type", "locale", "key"], name: "index_mobility_string_translations_on_keys", unique: true
+    t.index ["translatable_type", "key", "value", "locale"], name: "index_mobility_string_translations_on_query_keys"
+  end
+
+  create_table "mobility_text_translations", force: :cascade do |t|
+    t.string "locale", null: false
+    t.string "key", null: false
+    t.text "value"
+    t.string "translatable_type"
+    t.bigint "translatable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["translatable_id", "translatable_type", "key"], name: "index_mobility_text_translations_on_translatable_attribute"
+    t.index ["translatable_id", "translatable_type", "locale", "key"], name: "index_mobility_text_translations_on_keys", unique: true
   end
 
   create_table "product_images", force: :cascade do |t|
@@ -36,6 +69,18 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_23_221640) do
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_product_images_on_product_id"
     t.index ["product_variant_id"], name: "index_product_images_on_product_variant_id"
+  end
+
+  create_table "product_translations", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.string "slug"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["locale", "slug"], name: "index_product_translations_on_locale_and_slug", unique: true
+    t.index ["product_id", "locale"], name: "index_product_translations_on_product_id_and_locale", unique: true
   end
 
   create_table "product_variants", force: :cascade do |t|
@@ -51,9 +96,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_23_221640) do
   end
 
   create_table "products", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.text "description"
     t.bigint "category_id", null: false
     t.string "brand"
     t.integer "base_price_cents", null: false
@@ -62,7 +104,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_23_221640) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_products_on_category_id"
-    t.index ["slug"], name: "index_products_on_slug", unique: true
   end
 
   create_table "refresh_tokens", force: :cascade do |t|
@@ -92,8 +133,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_23_221640) do
   end
 
   add_foreign_key "categories", "categories", column: "parent_id"
+  add_foreign_key "category_translations", "categories"
   add_foreign_key "product_images", "product_variants"
   add_foreign_key "product_images", "products"
+  add_foreign_key "product_translations", "products"
   add_foreign_key "product_variants", "products"
   add_foreign_key "products", "categories"
   add_foreign_key "refresh_tokens", "users"

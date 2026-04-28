@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :product do
     name { Faker::Commerce.product_name }
-    slug { Faker::Internet.slug }
+    sequence(:slug) { |n| "#{Faker::Internet.slug}-#{n}" }
     description { Faker::Lorem.paragraph }
     category
     brand { Faker::Company.name }

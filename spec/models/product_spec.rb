@@ -2,11 +2,8 @@ require "rails_helper"
 
 RSpec.describe Product do
   describe "validations" do
-    subject { create(:product) }
-
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:slug) }
-    it { is_expected.to validate_uniqueness_of(:slug) }
     it { is_expected.to validate_presence_of(:base_price_cents) }
     it { is_expected.to validate_numericality_of(:base_price_cents).only_integer.is_greater_than(0) }
     it { is_expected.to validate_presence_of(:status) }

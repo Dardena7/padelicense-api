@@ -13,7 +13,9 @@ class GraphqlController < ApplicationController
     context = {
       current_user: load_current_user
     }
-    result = AppSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
+    result = I18n.with_locale(locale_from_header) do
+      AppSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
+    end
     render json: result
   rescue StandardError => e
     raise e unless Rails.env.development?
@@ -49,6 +51,11 @@ class GraphqlController < ApplicationController
     User.find_by(public_id: payload["user_id"])
   rescue JwtService::ExpiredToken, JwtService::InvalidToken
     nil
+  end
+
+  def locale_from_header
+    accepted = request.headers["Accept-Language"]&.split(",")&.first&.strip&.split("-")&.first
+    accepted if I18n.available_locales.map(&:to_s).include?(accepted)
   end
 
   def handle_error_in_development(e)

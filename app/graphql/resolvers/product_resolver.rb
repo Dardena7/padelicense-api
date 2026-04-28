@@ -6,7 +6,7 @@ module Resolvers
     argument :slug, String, required: true
 
     def resolve(slug:)
-      Product.find_by(slug: slug)
+      Product.i18n.find_by(slug: slug)
     end
   end
 end

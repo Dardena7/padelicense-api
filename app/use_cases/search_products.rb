@@ -9,7 +9,7 @@ class SearchProducts < BaseUseCase
 
   def call
     products = @scope.includes(:category, :variants, :images)
-    products = products.joins(:category).where(categories: { slug: @category_slug }) if @category_slug
+    products = products.where(category: Category.i18n.where(slug: @category_slug)) if @category_slug
     products = products.where(featured: true) if @featured
     products.order(created_at: :desc)
   end
