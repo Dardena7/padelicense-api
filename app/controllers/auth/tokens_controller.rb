@@ -18,7 +18,10 @@ module Auth
       refresh_token.destroy
       new_tokens = generate_tokens(user)
 
-      render json: { access_token: new_tokens[:access_token] }
+      render json: {
+        user: user_response(user),
+        access_token: new_tokens[:access_token]
+      }
     end
   end
 end
