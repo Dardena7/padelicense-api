@@ -23,10 +23,25 @@ module Authenticatable
   end
 
   def generate_tokens(user)
-    {
-      access_token: JwtService.encode(user),
-      refresh_token: user.refresh_tokens.create!.token
+    refresh_token = user.refresh_tokens.create!
+    set_refresh_token_cookie(refresh_token.token)
+
+    { access_token: JwtService.encode(user) }
+  end
+
+  def set_refresh_token_cookie(token)
+    cookies[:refresh_token] = {
+      value: token,
+      httponly: true,
+      secure: Rails.env.production?,
+      same_site: Rails.env.production? ? :none : :lax,
+      expires: 30.days.from_now,
+      path: "/auth"
     }
+  end
+
+  def clear_refresh_token_cookie
+    cookies.delete(:refresh_token, path: "/auth")
   end
 
   def user_response(user)

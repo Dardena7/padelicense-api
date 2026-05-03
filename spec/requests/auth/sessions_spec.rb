@@ -4,14 +4,15 @@ RSpec.describe "Auth::Sessions" do
   describe "POST /auth/login" do
     let!(:user) { create(:user, email: "john@example.com", password: "password123") }
 
-    it "returns tokens for valid credentials" do
+    it "returns access token in body and refresh token in cookie" do
       post "/auth/login", params: { email: "john@example.com", password: "password123" }, as: :json
 
       expect(response).to have_http_status(:ok)
       body = JSON.parse(response.body)
       expect(body["user"]["email"]).to eq("john@example.com")
       expect(body["access_token"]).to be_present
-      expect(body["refresh_token"]).to be_present
+      expect(body).not_to have_key("refresh_token")
+      expect(response.cookies["refresh_token"]).to be_present
     end
 
     it "returns 401 for wrong password" do
@@ -32,7 +33,7 @@ RSpec.describe "Auth::Sessions" do
   describe "DELETE /auth/logout" do
     let(:user) { create(:user) }
 
-    it "destroys all refresh tokens" do
+    it "destroys all refresh tokens and clears cookie" do
       token = JwtService.encode(user)
       create_list(:refresh_token, 3, user: user)
 
@@ -40,6 +41,7 @@ RSpec.describe "Auth::Sessions" do
 
       expect(response).to have_http_status(:ok)
       expect(user.refresh_tokens.count).to eq(0)
+      expect(response.cookies["refresh_token"]).to be_nil
     end
 
     it "returns 401 without token" do

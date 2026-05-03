@@ -7,8 +7,7 @@ module Auth
         tokens = generate_tokens(user)
         render json: {
           user: user_response(user),
-          access_token: tokens[:access_token],
-          refresh_token: tokens[:refresh_token]
+          access_token: tokens[:access_token]
         }
       else
         render json: { error: "Invalid email or password" }, status: :unauthorized
@@ -20,6 +19,7 @@ module Auth
       return if performed?
 
       current_user.refresh_tokens.destroy_all
+      clear_refresh_token_cookie
       render json: { message: "Logged out" }
     end
   end

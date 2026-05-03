@@ -14,7 +14,7 @@ RSpec.describe "Auth::Registrations" do
       }
     end
 
-    it "creates a user and returns tokens" do
+    it "creates a user and returns access token in body and refresh token in cookie" do
       post "/auth/signup", params: valid_params, as: :json
 
       expect(response).to have_http_status(:created)
@@ -22,7 +22,8 @@ RSpec.describe "Auth::Registrations" do
       expect(body["user"]["email"]).to eq("john@example.com")
       expect(body["user"]["first_name"]).to eq("John")
       expect(body["access_token"]).to be_present
-      expect(body["refresh_token"]).to be_present
+      expect(body).not_to have_key("refresh_token")
+      expect(response.cookies["refresh_token"]).to be_present
     end
 
     it "does not expose internal ids" do
