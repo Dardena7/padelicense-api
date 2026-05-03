@@ -16,6 +16,7 @@ module Types
       ids.map { |id| context.schema.object_from_id(id, context) }
     end
 
+    field :me, resolver: Resolvers::MeResolver
     field :categories, resolver: Resolvers::CategoriesResolver
     field :product, resolver: Resolvers::ProductResolver
     field :products, resolver: Resolvers::ProductsResolver

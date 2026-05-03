@@ -23,6 +23,7 @@ class AppSchema < GraphQL::Schema
     when Category then Types::CategoryType
     when ProductVariant then Types::ProductVariantType
     when ProductImage then Types::ProductImageType
+    when User then Types::UserType
     else
       raise GraphQL::RequiredImplementationMissingError, "Unknown type: #{obj.class}"
     end
