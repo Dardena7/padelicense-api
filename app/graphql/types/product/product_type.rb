@@ -18,5 +18,13 @@ module Types
     field :variants, [ Types::ProductVariantType ], null: false
     field :images, [ Types::ProductImageType ], null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :alternate_slugs, [ Types::LocalizedValueType ], null: false
+
+    def alternate_slugs
+      I18n.available_locales.filter_map do |locale|
+        slug = object.slug_backend.read(locale)
+        { locale: locale.to_s, value: slug } if slug.present?
+      end
+    end
   end
 end
