@@ -3,6 +3,9 @@ class User < ApplicationRecord
          :recoverable, :validatable
 
   has_many :refresh_tokens, dependent: :destroy
+  has_many :addresses, dependent: :destroy
+  has_many :orders, dependent: :restrict_with_error
+  has_one :cart, dependent: :destroy
 
   CUSTOMER = "customer".freeze
   ADMIN = "admin".freeze

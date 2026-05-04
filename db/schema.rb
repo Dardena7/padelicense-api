@@ -10,9 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_28_131907) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_04_121530) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "addresses", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "label"
+    t.string "line1", null: false
+    t.string "line2"
+    t.string "city", null: false
+    t.string "postal_code", null: false
+    t.string "country_iso", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id"
+  end
+
+  create_table "cart_items", force: :cascade do |t|
+    t.bigint "cart_id", null: false
+    t.bigint "product_variant_id", null: false
+    t.integer "quantity", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cart_id", "product_variant_id"], name: "index_cart_items_on_cart_id_and_product_variant_id", unique: true
+    t.index ["cart_id"], name: "index_cart_items_on_cart_id"
+    t.index ["product_variant_id"], name: "index_cart_items_on_product_variant_id"
+  end
+
+  create_table "carts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_carts_on_user_id", unique: true
+  end
 
   create_table "categories", force: :cascade do |t|
     t.bigint "parent_id"
@@ -32,6 +63,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_28_131907) do
     t.datetime "updated_at", null: false
     t.index ["category_id", "locale"], name: "index_category_translations_on_category_id_and_locale", unique: true
     t.index ["locale", "slug"], name: "index_category_translations_on_locale_and_slug", unique: true
+  end
+
+  create_table "line_items", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.bigint "product_variant_id", null: false
+    t.string "product_name", null: false
+    t.string "variant_name", null: false
+    t.integer "unit_price_cents", null: false
+    t.integer "quantity", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_line_items_on_order_id"
+    t.index ["product_variant_id"], name: "index_line_items_on_product_variant_id"
   end
 
   create_table "mobility_string_translations", force: :cascade do |t|
@@ -57,6 +101,20 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_28_131907) do
     t.datetime "updated_at", null: false
     t.index ["translatable_id", "translatable_type", "key"], name: "index_mobility_text_translations_on_translatable_attribute"
     t.index ["translatable_id", "translatable_type", "locale", "key"], name: "index_mobility_text_translations_on_keys", unique: true
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "number", null: false
+    t.string "status", default: "pending", null: false
+    t.integer "total_cents", null: false
+    t.string "stripe_payment_intent_id"
+    t.jsonb "shipping_address_snapshot", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["number"], name: "index_orders_on_number", unique: true
+    t.index ["stripe_payment_intent_id"], name: "index_orders_on_stripe_payment_intent_id", unique: true
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "product_images", force: :cascade do |t|
@@ -132,8 +190,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_28_131907) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "addresses", "users"
+  add_foreign_key "cart_items", "carts"
+  add_foreign_key "cart_items", "product_variants"
+  add_foreign_key "carts", "users"
   add_foreign_key "categories", "categories", column: "parent_id"
   add_foreign_key "category_translations", "categories"
+  add_foreign_key "line_items", "orders"
+  add_foreign_key "line_items", "product_variants"
+  add_foreign_key "orders", "users"
   add_foreign_key "product_images", "product_variants"
   add_foreign_key "product_images", "products"
   add_foreign_key "product_translations", "products"
