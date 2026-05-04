@@ -53,11 +53,5 @@ module App
 
     config.i18n.available_locales = [ :en, :fr, :nl ]
     config.i18n.default_locale = :en
-
-    initializer "collapse_graphql_type_dirs" do
-      Rails.autoloaders.main.collapse(
-        *Dir[Rails.root.join("app/graphql/types/*/")]
-      )
-    end
   end
 end

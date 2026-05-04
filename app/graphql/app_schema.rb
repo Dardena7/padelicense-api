@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AppSchema < GraphQL::Schema
-  # mutation(Types::MutationType)
+  mutation(Types::MutationType)
   query(Types::QueryType)
 
   # For batch-loading (see https://graphql-ruby.org/dataloader/overview.html)
@@ -21,8 +21,8 @@ class AppSchema < GraphQL::Schema
     case obj
     when Product then Types::ProductType
     when Category then Types::CategoryType
-    when ProductVariant then Types::ProductVariantType
-    when ProductImage then Types::ProductImageType
+    when ProductVariant then Types::Product::VariantType
+    when ProductImage then Types::Product::ImageType
     when User then Types::UserType
     else
       raise GraphQL::RequiredImplementationMissingError, "Unknown type: #{obj.class}"

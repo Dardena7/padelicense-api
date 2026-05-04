@@ -2,7 +2,8 @@
 
 ## Conventions
 - Services (`app/services/`) = external integrations (Stripe, JWT, email)
-- Use cases (`app/use_cases/`) = business logic (SearchProducts, CreateOrder)
+- Use cases (`app/use_cases/`) = business logic, namespaced by domain (`Cart::AddItem`, `Products::Search`)
+- Use cases receive objects, never GraphQL IDs — mutations resolve IDs before calling use cases
 - String enums with frozen constants (`DRAFT = "draft".freeze`)
 - GraphQL enums reference model constants (`value "DRAFT", "...", value: Product::DRAFT`)
 - GraphQL types organized in subdirectories with Zeitwerk collapse (`types/product/`, `types/category/`)

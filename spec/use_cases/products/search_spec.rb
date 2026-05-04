@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe SearchProducts do
+RSpec.describe Products::Search do
   let(:category) { create(:category, slug: "rackets") }
   let(:other_category) { create(:category, slug: "balls") }
 
