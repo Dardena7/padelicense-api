@@ -1,4 +1,4 @@
-module Cart
+module Carts
   class RemoveItem < BaseUseCase
     def initialize(user:, cart_item:)
       @user = user

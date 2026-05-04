@@ -13,7 +13,7 @@ module Mutations
       end
 
       def resolve(cart_item:, quantity:)
-        cart = ::Cart::UpdateItem.run(
+        cart = ::Carts::UpdateItem.run(
           user: context[:current_user],
           cart_item: cart_item,
           quantity: quantity

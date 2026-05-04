@@ -19,7 +19,7 @@ module Mutations
           }
         end
 
-        cart = ::Cart::Sync.run(
+        cart = ::Carts::Sync.run(
           user: context[:current_user],
           items: resolved_items
         )

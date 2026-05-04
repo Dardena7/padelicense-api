@@ -1,4 +1,4 @@
-module Cart
+module Carts
   class Sync < BaseUseCase
     def initialize(user:, items:)
       @user = user

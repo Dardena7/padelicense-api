@@ -12,7 +12,7 @@ module Mutations
       end
 
       def resolve(cart_item:)
-        cart = ::Cart::RemoveItem.run(
+        cart = ::Carts::RemoveItem.run(
           user: context[:current_user],
           cart_item: cart_item
         )

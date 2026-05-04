@@ -1,4 +1,4 @@
-module Cart
+module Carts
   class AddItem < BaseUseCase
     def initialize(user:, product_variant:, quantity: 1)
       @user = user
