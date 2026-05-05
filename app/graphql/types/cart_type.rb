@@ -1,11 +1,12 @@
 module Types
   class CartType < Types::BaseObject
+    implements Types::NodeType
+
     def self.authorized?(object, context)
       policy = CartPolicy.new(context[:current_user], object)
       policy.show?
     end
 
-    field :id, ID, null: false
     field :guest_uuid, String
     field :items, [ Types::Cart::ItemType ], null: false
     field :total_cents, Integer, null: false
