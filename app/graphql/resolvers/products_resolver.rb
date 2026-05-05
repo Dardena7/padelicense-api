@@ -9,11 +9,7 @@ module Resolvers
     def resolve(category_slug: nil, featured: nil)
       scope = ProductPolicy::Scope.new(context[:current_user], Product).resolve
 
-      Products::Search.run(
-        scope: scope,
-        category_slug: category_slug,
-        featured: featured
-      )
+      Products::Search.run(scope:, category_slug:, featured:)
     end
   end
 end

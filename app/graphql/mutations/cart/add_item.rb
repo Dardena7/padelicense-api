@@ -1,6 +1,6 @@
 module Mutations
   module Cart
-    class AddItem < Mutations::BaseMutation
+    class AddItem < Mutations::Cart::BaseCartMutation
       graphql_name "AddItemToCart"
 
       argument :product_variant_id, ID, required: true, loads: Types::Product::VariantType
@@ -8,18 +8,12 @@ module Mutations
 
       field :cart, Types::CartType, null: false
 
-      def self.authorized?(object, context)
-        context[:current_user].present?
-      end
+      def resolve(product_variant:, quantity:, guest_uuid: nil)
+        cart = resolve_cart(guest_uuid:)
 
-      def resolve(product_variant:, quantity:)
-        cart = ::Carts::AddItem.run(
-          user: context[:current_user],
-          product_variant: product_variant,
-          quantity: quantity
-        )
+        result = ::Carts::AddItem.run(cart:, product_variant:, quantity:)
 
-        { cart: cart }
+        { cart: result }
       end
     end
   end

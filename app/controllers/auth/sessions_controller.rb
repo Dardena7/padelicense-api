@@ -3,15 +3,15 @@ module Auth
     def create
       user = User.find_by(email: params[:email])
 
-      if user&.valid_password?(params[:password])
-        tokens = generate_tokens(user)
-        render json: {
-          user: user_response(user),
-          access_token: tokens[:access_token]
-        }
-      else
-        render json: { error: "Invalid email or password" }, status: :unauthorized
+      unless user&.valid_password?(params[:password])
+        return render json: { error: "Invalid email or password" }, status: :unauthorized
       end
+
+      tokens = generate_tokens(user)
+      render json: {
+        user: user_response(user),
+        access_token: tokens[:access_token]
+      }
     end
 
     def destroy

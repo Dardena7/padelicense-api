@@ -6,9 +6,11 @@
 - Use cases receive objects, never GraphQL IDs — mutations resolve IDs before calling use cases
 - String enums with frozen constants (`DRAFT = "draft".freeze`)
 - GraphQL enums reference model constants (`value "DRAFT", "...", value: Product::DRAFT`)
-- GraphQL types organized in subdirectories with Zeitwerk collapse (`types/product/`, `types/category/`)
+- GraphQL types: main types at root (`ProductType`), sub-types namespaced (`Product::VariantType`) with `graphql_name`
 - Pundit for authorization, policies on GraphQL types via `self.authorized?`
 - Relay-style global IDs (node interface) on all GraphQL types
+- Prefer early returns over if/else (`return ... if`, `return ... unless`)
+- Use keyword argument shorthand when variable matches (`method(foo:)` not `method(foo: foo)`)
 - Tests alongside code, not batched
 
 ## Stack

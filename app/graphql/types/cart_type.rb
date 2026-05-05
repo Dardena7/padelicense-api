@@ -6,6 +6,7 @@ module Types
     end
 
     field :id, ID, null: false
+    field :guest_uuid, String
     field :items, [ Types::Cart::ItemType ], null: false
     field :total_cents, Integer, null: false
 

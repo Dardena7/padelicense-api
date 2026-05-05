@@ -3,15 +3,15 @@ module Auth
     def create
       user = User.new(signup_params)
 
-      if user.save
-        tokens = generate_tokens(user)
-        render json: {
-          user: user_response(user),
-          access_token: tokens[:access_token]
-        }, status: :created
-      else
-        render json: { errors: user.errors.full_messages }, status: :unprocessable_content
+      unless user.save
+        return render json: { errors: user.errors.full_messages }, status: :unprocessable_content
       end
+
+      tokens = generate_tokens(user)
+      render json: {
+        user: user_response(user),
+        access_token: tokens[:access_token]
+      }, status: :created
     end
 
     private

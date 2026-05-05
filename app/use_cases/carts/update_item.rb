@@ -1,7 +1,7 @@
 module Carts
   class UpdateItem < BaseUseCase
-    def initialize(user:, cart_item:, quantity:)
-      @user = user
+    def initialize(cart:, cart_item:, quantity:)
+      @cart = cart
       @cart_item = cart_item
       @quantity = quantity
     end
@@ -9,13 +9,11 @@ module Carts
     private
 
     def call
-      cart = @user.cart
-      raise ActiveRecord::RecordNotFound, "Cart not found" unless cart
-      raise ActiveRecord::RecordNotFound, "Item not in cart" unless cart.items.include?(@cart_item)
+      raise ActiveRecord::RecordNotFound, "Item not in cart" unless @cart.items.include?(@cart_item)
 
       @cart_item.update!(quantity: @quantity)
 
-      cart.reload
+      @cart.reload
     end
   end
 end

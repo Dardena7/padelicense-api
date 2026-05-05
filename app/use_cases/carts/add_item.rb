@@ -1,7 +1,7 @@
 module Carts
   class AddItem < BaseUseCase
-    def initialize(user:, product_variant:, quantity: 1)
-      @user = user
+    def initialize(cart:, product_variant:, quantity: 1)
+      @cart = cart
       @product_variant = product_variant
       @quantity = quantity
     end
@@ -9,16 +9,15 @@ module Carts
     private
 
     def call
-      cart = @user.cart || @user.create_cart!
-      item = cart.items.find_by(product_variant: @product_variant)
+      item = @cart.items.find_by(product_variant: @product_variant)
 
       if item
         item.update!(quantity: item.quantity + @quantity)
       else
-        cart.items.create!(product_variant: @product_variant, quantity: @quantity)
+        @cart.items.create!(product_variant: @product_variant, quantity: @quantity)
       end
 
-      cart.reload
+      @cart.reload
     end
   end
 end
