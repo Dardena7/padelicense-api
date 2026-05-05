@@ -7,5 +7,7 @@ Rails.application.routes.draw do
     post "refresh", to: "tokens#refresh"
   end
 
+  post "webhooks/stripe", to: "webhooks/stripe#create"
+
   get "up" => "rails/health#show", as: :rails_health_check
 end

@@ -13,5 +13,7 @@ module Types
     field :last_name, String, null: false
     field :role, Types::User::RoleEnum, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :addresses, [ Types::AddressType ], null: false
+    field :orders, [ Types::OrderType ], null: false
   end
 end

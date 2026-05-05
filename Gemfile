@@ -57,3 +57,5 @@ group :development, :test do
 end
 
 gem "mobility", "~> 1.3"
+
+gem "stripe", "~> 19.1"

@@ -11,6 +11,11 @@ FactoryBot.define do
       }
     end
 
+    trait :guest do
+      user { nil }
+      guest_email { Faker::Internet.email }
+    end
+
     trait :paid do
       status { "paid" }
       stripe_payment_intent_id { "pi_#{SecureRandom.hex(12)}" }

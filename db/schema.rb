@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_05_053321) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_05_145618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -106,7 +106,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_05_053321) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.string "number", null: false
     t.string "status", default: "pending", null: false
     t.integer "total_cents", null: false
@@ -114,6 +114,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_05_053321) do
     t.jsonb "shipping_address_snapshot", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "guest_email"
     t.index ["number"], name: "index_orders_on_number", unique: true
     t.index ["stripe_payment_intent_id"], name: "index_orders_on_stripe_payment_intent_id", unique: true
     t.index ["user_id"], name: "index_orders_on_user_id"
