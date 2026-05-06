@@ -13,5 +13,6 @@ module Types
     field :city, String, null: false
     field :postal_code, String, null: false
     field :country_iso, String, null: false
+    field :default, Boolean, null: false
   end
 end

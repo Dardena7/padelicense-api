@@ -8,5 +8,6 @@ module Types
     argument :city, String, required: true
     argument :postal_code, String, required: true
     argument :country_iso, String, required: true
+    argument :default, Boolean, required: false
   end
 end

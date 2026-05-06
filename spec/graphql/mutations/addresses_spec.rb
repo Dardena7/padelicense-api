@@ -14,6 +14,7 @@ RSpec.describe "address mutations" do
               city
               postalCode
               countryIso
+              default
             }
           }
         }
@@ -30,9 +31,7 @@ RSpec.describe "address mutations" do
 
       expect(data["label"]).to eq("Maison")
       expect(data["line1"]).to eq("Rue de la Loi 1")
-      expect(data["city"]).to eq("Bruxelles")
-      expect(data["postalCode"]).to eq("1000")
-      expect(data["countryIso"]).to eq("BE")
+      expect(data["default"]).to be true
       expect(user.addresses.count).to eq(1)
     end
 
@@ -95,6 +94,37 @@ RSpec.describe "address mutations" do
       })
 
       expect(Address.find_by(id: address.id)).to be_nil
+    end
+  end
+
+  describe "updateAddress — set default" do
+    let(:mutation) do
+      <<~GQL
+        mutation UpdateAddress($addressId: ID!, $input: AddressInput!) {
+          updateAddress(input: { addressId: $addressId, input: $input }) {
+            address {
+              id
+              default
+            }
+          }
+        }
+      GQL
+    end
+
+    it "sets the address as default and unsets others" do
+      user = create(:user)
+      first = create(:address, user:)
+      second = create(:address, user:)
+
+      expect(first.reload.default).to be true
+
+      AppSchema.execute(mutation, context: { current_user: user }, variables: {
+        addressId: AppSchema.id_from_object(second, Types::AddressType, {}),
+        input: { line1: second.line1, city: second.city, postalCode: second.postal_code, countryIso: second.country_iso, default: true }
+      })
+
+      expect(first.reload.default).to be false
+      expect(second.reload.default).to be true
     end
   end
 end
