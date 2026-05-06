@@ -9,6 +9,7 @@ module Types
       field :price_cents, Integer
       field :effective_price, Integer, null: false
       field :stock_quantity, Integer, null: false
+      field :product, Types::ProductType, null: false
       field :images, [ Types::Product::ImageType ], null: false
     end
   end
