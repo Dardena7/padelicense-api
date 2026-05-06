@@ -9,5 +9,6 @@ module Types
     field :create_address, mutation: Mutations::Addresses::Create
     field :update_address, mutation: Mutations::Addresses::Update
     field :delete_address, mutation: Mutations::Addresses::Delete
+    field :update_profile, mutation: Mutations::Users::UpdateProfile
   end
 end
