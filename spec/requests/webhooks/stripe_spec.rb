@@ -32,7 +32,7 @@ RSpec.describe "Webhooks::Stripe" do
         data: {
           object: {
             id: "pi_test_123",
-            metadata: { order_id: order.id }
+            metadata: { order_uuid: order.uuid }
           }
         }
       })
@@ -50,7 +50,7 @@ RSpec.describe "Webhooks::Stripe" do
         data: {
           object: {
             id: "pi_test_456",
-            metadata: { order_id: order.id }
+            metadata: { order_uuid: order.uuid }
           }
         }
       })
@@ -66,7 +66,7 @@ RSpec.describe "Webhooks::Stripe" do
         data: {
           object: {
             id: "pi_test_789",
-            metadata: { order_id: 999999 }
+            metadata: { order_uuid: "nonexistent-uuid" }
           }
         }
       })

@@ -40,7 +40,7 @@ module Orders
         amount: order.total_cents,
         currency: "eur",
         metadata: {
-          order_id: order.id,
+          order_uuid: order.uuid,
           order_number: order.number
         }
       )

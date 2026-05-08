@@ -1,39 +1,95 @@
 name: CI
 
+# Quand est-ce que ce workflow se lance ?
+# - Sur chaque push sur main (après un merge)
+# - Sur chaque pull request (avant de merger)
 on:
-  pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
+  pull_request:
 
 jobs:
-  scan_ruby:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
-
+  # Job 1 : Vérification du style et de la sécurité du code
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Installe Ruby avec la version du fichier .ruby-version
+      # bundler-cache: true → met en cache les gems pour accélérer les prochains runs
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Lint code for consistent style
+      # Rubocop vérifie le style du code (indentation, conventions Rails, etc.)
+      # -f github → format spécial qui affiche les erreurs directement dans la PR
+      - name: Lint code style
         run: bin/rubocop -f github
 
+      # Brakeman scanne le code pour les failles de sécurité courantes
+      # (SQL injection, XSS, mass assignment, etc.)
+      - name: Security scan
+        run: bin/brakeman --no-pager
+
+  # Job 2 : Tests RSpec
+  # Ce job a besoin d'une base de données et de Redis
+  test:
+    runs-on: ubuntu-latest
+
+    # Services = conteneurs Docker qui tournent à côté du job
+    # C'est comme ton docker-compose.yml mais géré par GitHub Actions
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        # Healthcheck : le job attend que PostgreSQL soit prêt avant de continuer
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=2s
+          --health-timeout=5s
+          --health-retries=10
+
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=2s
+          --health-timeout=5s
+          --health-retries=10
+
+    # Variables d'environnement pour le job
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/padelicense_test
+      REDIS_URL: redis://localhost:6379/0
+      RAILS_ENV: test
+      # Fausses clés Stripe — les tests unitaires mockent Stripe,
+      # ils n'appellent jamais la vraie API
+      STRIPE_SECRET_KEY: sk_test_fake_for_ci
+      STRIPE_WEBHOOK_SECRET: whsec_fake_for_ci
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      # Charge le schéma SQL dans la base de test
+      # (plus rapide que db:migrate car ça applique le schema.rb directement)
+      - name: Setup database
+        run: bin/rails db:schema:load
+
+      # Lance tous les tests RSpec
+      - name: Run tests
+        run: bundle exec rspec

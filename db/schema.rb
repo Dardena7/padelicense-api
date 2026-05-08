@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_06_124738) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_08_231257) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -116,9 +116,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_06_124738) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "guest_email"
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["number"], name: "index_orders_on_number", unique: true
     t.index ["stripe_payment_intent_id"], name: "index_orders_on_stripe_payment_intent_id", unique: true
     t.index ["user_id"], name: "index_orders_on_user_id"
+    t.index ["uuid"], name: "index_orders_on_uuid", unique: true
   end
 
   create_table "product_images", force: :cascade do |t|

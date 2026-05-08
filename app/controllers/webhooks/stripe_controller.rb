@@ -31,9 +31,9 @@ module Webhooks
 
     def handle_payment_intent_succeeded(event)
       payment_intent = event.data.object
-      order_id = payment_intent.metadata.order_id
+      order_uuid = payment_intent.metadata.order_uuid
 
-      order = Order.find_by(id: order_id)
+      order = Order.find_by(uuid: order_uuid)
       return unless order
       return unless order.pending?
 

@@ -7,6 +7,7 @@ module Types
       policy.show?
     end
 
+    field :uuid, String, null: false
     field :number, String, null: false
     field :status, Types::Order::StatusEnum, null: false
     field :total_cents, Integer, null: false
