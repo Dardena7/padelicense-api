@@ -1,5 +1,5 @@
 class JwtService
-  SECRET_KEY = Rails.application.credentials.secret_key_base
+  SECRET_KEY = ENV.fetch("SECRET_KEY_BASE") { Rails.application.credentials.secret_key_base }
   ALGORITHM = "HS256"
   ISSUER = "padelicense-api"
   AUDIENCE = "padelicense-shop"

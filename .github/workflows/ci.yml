@@ -74,6 +74,8 @@ jobs:
       # ils n'appellent jamais la vraie API
       STRIPE_SECRET_KEY: sk_test_fake_for_ci
       STRIPE_WEBHOOK_SECRET: whsec_fake_for_ci
+      # Secret key for JWT signing — any value works for tests
+      SECRET_KEY_BASE: test_secret_key_base_for_ci_at_least_64_characters_long_to_satisfy_rails
 
     steps:
       - name: Checkout code
