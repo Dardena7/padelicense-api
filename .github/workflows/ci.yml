@@ -85,10 +85,10 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      # Charge le schéma SQL dans la base de test
-      # (plus rapide que db:migrate car ça applique le schema.rb directement)
+      # Crée la base de test et charge le schéma
+      # db:prepare = db:create + db:schema:load (ou db:migrate si la DB existe déjà)
       - name: Setup database
-        run: bin/rails db:schema:load
+        run: bin/rails db:prepare
 
       # Lance tous les tests RSpec
       - name: Run tests
