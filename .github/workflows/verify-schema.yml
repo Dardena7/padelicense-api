@@ -1,0 +1,64 @@
+name: Verify Schema
+
+# Vérifie que les changements de schema ne cassent pas les queries du front
+on:
+  pull_request:
+
+jobs:
+  verify-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # Checkout le back (branche de la PR) — c'est le nouveau schema à tester
+      - name: Checkout API (PR branch)
+        uses: actions/checkout@v4
+
+      # Créer le .env minimal pour l'API
+      - name: Create .env
+        run: |
+          cat > .env <<'EOF'
+          STRIPE_SECRET_KEY=sk_test_fake
+          STRIPE_WEBHOOK_SECRET=whsec_fake
+          SECRET_KEY_BASE=verify_schema_secret_key_base_at_least_64_characters_long
+          EOF
+
+      # Lancer l'API pour exposer le schema GraphQL
+      - name: Start API
+        run: |
+          docker compose up -d api
+          docker compose exec -T api rails db:prepare
+          echo "Waiting for API..."
+          timeout 120 bash -c 'until curl -sf http://localhost:3000/up; do sleep 3; done'
+          echo "API is ready"
+
+      # Checkout le front (main) — pour récupérer les queries et le codegen config
+      - name: Checkout shop queries
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/padelicense-shop
+          path: shop
+          token: ${{ secrets.REPO_DISPATCH_TOKEN }}
+
+      # Installer Node + dépendances du front (juste pour graphql-codegen)
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: shop/package-lock.json
+
+      - name: Install shop dependencies
+        working-directory: shop
+        run: npm ci
+
+      # Lancer le codegen — il introspect le schema de la PR
+      # et valide toutes les queries du front contre ce schema
+      # Si un champ a été supprimé/renommé et qu'une query l'utilise → erreur
+      - name: Validate queries against schema
+        working-directory: shop
+        run: npx graphql-codegen
+
+      - name: Stop API
+        if: always()
+        run: docker compose down
