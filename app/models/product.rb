@@ -20,4 +20,8 @@ class Product < ApplicationRecord
   validates :slug, presence: true
   validates :base_price_cents, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :status, presence: true
+
+  def display_name
+    "#{brand} #{name}"
+  end
 end
