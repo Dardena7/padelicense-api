@@ -13,7 +13,6 @@ module Types
     field :brand, String
     field :base_price_cents, Integer, null: false
     field :status, Types::Product::StatusEnum, null: false
-    field :featured, Boolean, null: false
     field :category, Types::CategoryType, null: false
     field :variants, [ Types::Product::VariantType ], null: false
     field :images, [ Types::Product::ImageType ], null: false
