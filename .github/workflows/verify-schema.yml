@@ -12,7 +12,7 @@ jobs:
     steps:
       # Checkout le back (branche de la PR) — c'est le nouveau schema à tester
       - name: Checkout API (PR branch)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Créer le .env minimal pour l'API
       - name: Create .env
@@ -34,7 +34,7 @@ jobs:
 
       # Checkout le front (main) — pour récupérer les queries et le codegen config
       - name: Checkout shop queries
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ github.repository_owner }}/padelicense-shop
           path: shop
@@ -42,7 +42,7 @@ jobs:
 
       # Installer Node + dépendances du front (juste pour graphql-codegen)
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 20
           cache: npm
