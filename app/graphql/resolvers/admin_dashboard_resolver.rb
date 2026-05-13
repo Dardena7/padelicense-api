@@ -1,6 +1,6 @@
 module Resolvers
   class AdminDashboardResolver < Resolvers::BaseResolver
-    type Types::Admin::DashboardType, null: true
+    type Types::Admin::DashboardType, null: false
     description "Dashboard stats for admin users"
 
     def authorized?
