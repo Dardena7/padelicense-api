@@ -41,7 +41,7 @@ def seed_product(data)
 
   product.save!
 
-  variants = data.fetch(:variants, [{ name: "Default", sku: "#{en[:slug]}-default", stock_quantity: 10 }])
+  variants = data.fetch(:variants, [ { name: "Default", sku: "#{en[:slug]}-default", stock_quantity: 10 } ])
 
   variants.each do |v|
     product.variants.find_or_create_by!(sku: v[:sku]) do |pv|

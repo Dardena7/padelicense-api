@@ -55,7 +55,7 @@ module Admin
       end
 
       def paid_orders_since(start_time)
-        Order.where(status: [Order::PAID, Order::SHIPPED, Order::DELIVERED])
+        Order.where(status: [ Order::PAID, Order::SHIPPED, Order::DELIVERED ])
              .where("created_at >= ?", start_time)
       end
     end

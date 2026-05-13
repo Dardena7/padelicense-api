@@ -114,7 +114,7 @@ RSpec.describe Admin::Dashboard::Stats do
 
       result = described_class.run
 
-      expect(result[:low_stock_variants].to_a).to eq([v0, v1, v3])
+      expect(result[:low_stock_variants].to_a).to eq([ v0, v1, v3 ])
     end
   end
 end
