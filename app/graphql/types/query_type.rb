@@ -22,5 +22,6 @@ module Types
     field :product, resolver: Resolvers::ProductResolver
     field :products, resolver: Resolvers::ProductsResolver
     field :verify_cart, resolver: Resolvers::VerifyCartResolver
+    field :admin_dashboard, resolver: Resolvers::AdminDashboardResolver
   end
 end
