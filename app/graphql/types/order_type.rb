@@ -14,6 +14,8 @@ module Types
     field :stripe_payment_intent_id, String
     field :shipping_address_snapshot, GraphQL::Types::JSON, null: false
     field :line_items, [ Types::Order::LineItemType ], null: false
+    field :user, Types::UserType
+    field :guest_email, String
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end
