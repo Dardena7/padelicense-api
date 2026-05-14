@@ -9,7 +9,7 @@ module Mutations
 
         field :order, Types::OrderType, null: false
 
-        def authorized?(order:, **_args)
+        def authorized?(order:, status:)
           policy = AdminPolicy.new(context[:current_user], nil)
           raise GraphQL::ExecutionError, "Not authorized" unless policy.access?
 

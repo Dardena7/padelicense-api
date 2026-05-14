@@ -6,7 +6,7 @@ module Resolvers
 
     argument :status, Types::Order::StatusEnum, required: false
 
-    def authorized?(**_args)
+    def authorized?(status: nil)
       policy = AdminPolicy.new(context[:current_user], nil)
       raise GraphQL::ExecutionError, "Not authorized" unless policy.access?
 
