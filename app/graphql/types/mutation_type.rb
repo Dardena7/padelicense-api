@@ -10,5 +10,6 @@ module Types
     field :update_address, mutation: Mutations::Addresses::Update
     field :delete_address, mutation: Mutations::Addresses::Delete
     field :update_profile, mutation: Mutations::Users::UpdateProfile
+    field :admin_update_order_status, mutation: Mutations::Admin::Orders::UpdateStatus
   end
 end
