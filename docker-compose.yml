@@ -40,7 +40,9 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/padelicense_development
+      DB_HOST: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
       REDIS_URL: redis://redis:6379/0
 
   sidekiq:
@@ -58,7 +60,9 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/padelicense_development
+      DB_HOST: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
       REDIS_URL: redis://redis:6379/0
 
 volumes:
