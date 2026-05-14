@@ -9,7 +9,7 @@ module Types
       field :revenue_this_week_cents, Integer, null: false
       field :revenue_this_month_cents, Integer, null: false
       field :recent_orders, [ Types::OrderType ], null: false
-      field :low_stock_variants, [ Types::Admin::LowStockVariantType ], null: false
+      field :low_stock_variants, [ Types::Product::VariantType ], null: false
 
       def order_counts_by_status
         object[:order_counts_by_status].map { |status, count| { status:, count: } }

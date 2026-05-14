@@ -21,7 +21,10 @@ RSpec.describe "adminDashboard query" do
             name
             sku
             stockQuantity
-            productName
+            product {
+              id
+              name
+            }
           }
         }
       }
