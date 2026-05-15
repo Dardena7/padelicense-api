@@ -5,11 +5,12 @@ module Resolvers
 
     argument :category_slug, String, required: false
     argument :featured, Boolean, required: false
+    argument :status, Types::Product::StatusEnum, required: false
 
-    def resolve(category_slug: nil, featured: nil)
+    def resolve(category_slug: nil, featured: nil, status: nil)
       scope = ProductPolicy::Scope.new(context[:current_user], Product).resolve
 
-      Products::Search.run(scope:, category_slug:, featured:)
+      Products::Search.run(scope:, category_slug:, featured:, status:)
     end
   end
 end

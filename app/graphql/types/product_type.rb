@@ -19,6 +19,18 @@ module Types
     field :images, [ Types::Product::ImageType ], null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :alternate_slugs, [ Types::LocalizedValueType ], null: false
+    field :translations, [ Types::Product::TranslationType ], null: false
+
+    def translations
+      I18n.available_locales.map do |locale|
+        {
+          locale: locale.to_s,
+          name: object.name_backend.read(locale) || "",
+          slug: object.slug_backend.read(locale) || "",
+          description: object.description_backend.read(locale)
+        }
+      end
+    end
 
     def alternate_slugs
       I18n.available_locales.filter_map do |locale|
