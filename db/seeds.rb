@@ -51,6 +51,12 @@ def seed_product(data)
     end
   end
 
+  unless product.images.any?
+    slug = en[:slug]
+    product.images.create!(image_url: "https://picsum.photos/seed/#{slug}-1/600/600", position: 0)
+    product.images.create!(image_url: "https://picsum.photos/seed/#{slug}-2/600/600", position: 1)
+  end
+
   product
 end
 

@@ -11,5 +11,8 @@ module Types
     field :delete_address, mutation: Mutations::Addresses::Delete
     field :update_profile, mutation: Mutations::Users::UpdateProfile
     field :admin_update_order_status, mutation: Mutations::Admin::Orders::UpdateStatus
+    field :admin_create_category, mutation: Mutations::Admin::Categories::Create
+    field :admin_update_category, mutation: Mutations::Admin::Categories::Update
+    field :admin_delete_category, mutation: Mutations::Admin::Categories::Delete
   end
 end
