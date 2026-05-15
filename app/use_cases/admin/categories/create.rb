@@ -10,10 +10,14 @@ module Admin
       private
 
       def call
-        category = ::Category.new(parent: @parent, position: @position)
+        category = ::Category.new(parent: @parent, position: @position || next_position)
         apply_translations(category)
         category.save!
         category
+      end
+
+      def next_position
+        ::Category.where(parent_id: @parent&.id).maximum(:position).to_i + 1
       end
 
       def apply_translations(category)
