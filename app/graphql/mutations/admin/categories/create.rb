@@ -24,6 +24,8 @@ module Mutations
             position:
           )
           { category: }
+        rescue ::Admin::Categories::Create::TooDeep => e
+          raise GraphQL::ExecutionError, e.message
         end
       end
     end

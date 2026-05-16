@@ -27,4 +27,24 @@ RSpec.describe Admin::Categories::Create do
     expect(category.parent).to eq(parent)
     expect(category.position).to eq(2)
   end
+
+  it "allows 3 levels deep" do
+    root = create(:category)
+    child = create(:category, parent: root)
+
+    category = described_class.run(translations:, parent: child)
+
+    expect(category).to be_persisted
+    expect(category.parent).to eq(child)
+  end
+
+  it "rejects 4th level" do
+    root = create(:category)
+    child = create(:category, parent: root)
+    grandchild = create(:category, parent: child)
+
+    expect {
+      described_class.run(translations:, parent: grandchild)
+    }.to raise_error(described_class::TooDeep, /Maximum category depth is 3/)
+  end
 end
