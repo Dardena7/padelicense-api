@@ -5,16 +5,23 @@ module Resolvers
 
     argument :category_slug, String, required: false
     argument :featured, Boolean, required: false
+    argument :filters, Types::Product::SearchInput, required: false
+
+    # Deprecated: use filters input instead
     argument :status, Types::Product::StatusEnum, required: false
     argument :search, String, required: false
     argument :order_by, Types::Product::OrderByEnum, required: false
     argument :min_price, Integer, required: false
     argument :max_price, Integer, required: false
 
-    def resolve(category_slug: nil, featured: nil, status: nil, search: nil, order_by: nil, min_price: nil, max_price: nil)
+    def resolve(category_slug: nil, featured: nil, filters: nil, status: nil, search: nil, order_by: nil, min_price: nil, max_price: nil)
       scope = ProductPolicy::Scope.new(context[:current_user], Product).resolve
 
-      Products::Search.run(scope:, category_slug:, featured:, status:, search:, order_by:, min_price:, max_price:)
+      merged_filters = (filters&.to_h || {}).merge(
+        { status:, search:, order_by:, min_price:, max_price: }.compact
+      )
+
+      Products::Search.run(scope:, category_slug:, featured:, filters: merged_filters)
     end
   end
 end

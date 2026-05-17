@@ -2,15 +2,15 @@ module Products
   class Search < BaseUseCase
     VALID_ORDER_BY = %w[newest price_asc price_desc name_asc].freeze
 
-    def initialize(scope:, category_slug: nil, featured: nil, status: nil, search: nil, order_by: nil, min_price: nil, max_price: nil)
+    def initialize(scope:, filters: {}, category_slug: nil, featured: nil)
       @scope = scope
       @category_slug = category_slug
       @featured = featured
-      @status = status
-      @search = search
-      @order_by = order_by
-      @min_price = min_price
-      @max_price = max_price
+      @status = filters[:status]
+      @search = filters[:search]
+      @order_by = filters[:order_by]
+      @min_price = filters[:min_price]
+      @max_price = filters[:max_price]
     end
 
     private

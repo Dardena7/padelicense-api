@@ -26,7 +26,7 @@ RSpec.describe Products::Search do
   end
 
   it "filters by status" do
-    result = described_class.run(scope: Product.all, status: "draft")
+    result = described_class.run(scope: Product.all, filters: { status: "draft" })
     expect(result).to eq([ draft ])
   end
 
@@ -44,23 +44,23 @@ RSpec.describe Products::Search do
 
   describe "search" do
     it "searches by product name" do
-      result = described_class.run(scope: Product.all, search: "Alpha Racket")
+      result = described_class.run(scope: Product.all, filters: { search: "Alpha Racket" })
       expect(result).to include(active)
       expect(result).not_to include(other)
     end
 
     it "searches case-insensitively" do
-      result = described_class.run(scope: Product.all, search: "alpha racket")
+      result = described_class.run(scope: Product.all, filters: { search: "alpha racket" })
       expect(result).to include(active)
     end
 
     it "searches with partial match" do
-      result = described_class.run(scope: Product.all, search: "Alpha")
+      result = described_class.run(scope: Product.all, filters: { search: "Alpha" })
       expect(result).to include(active)
     end
 
     it "returns empty for non-matching search" do
-      result = described_class.run(scope: Product.all, search: "nonexistentproductxyz")
+      result = described_class.run(scope: Product.all, filters: { search: "nonexistentproductxyz" })
       expect(result).to be_empty
     end
   end
@@ -72,31 +72,31 @@ RSpec.describe Products::Search do
     end
 
     it "orders by price ascending" do
-      result = described_class.run(scope: Product.all, order_by: "price_asc")
+      result = described_class.run(scope: Product.all, filters: { order_by: "price_asc" })
       expect(result.map(&:base_price_cents)).to eq([ 5000, 10000, 20000, 30000 ])
     end
 
     it "orders by price descending" do
-      result = described_class.run(scope: Product.all, order_by: "price_desc")
+      result = described_class.run(scope: Product.all, filters: { order_by: "price_desc" })
       expect(result.map(&:base_price_cents)).to eq([ 30000, 20000, 10000, 5000 ])
     end
   end
 
   describe "price range" do
     it "filters by min price" do
-      result = described_class.run(scope: Product.all, min_price: 15000)
+      result = described_class.run(scope: Product.all, filters: { min_price: 15000 })
       expect(result).to include(active, featured)
       expect(result).not_to include(draft, other)
     end
 
     it "filters by max price" do
-      result = described_class.run(scope: Product.all, max_price: 15000)
+      result = described_class.run(scope: Product.all, filters: { max_price: 15000 })
       expect(result).to include(draft, other)
       expect(result).not_to include(active, featured)
     end
 
     it "filters by price range" do
-      result = described_class.run(scope: Product.all, min_price: 10000, max_price: 20000)
+      result = described_class.run(scope: Product.all, filters: { min_price: 10000, max_price: 20000 })
       expect(result).to include(active, draft)
       expect(result).not_to include(other, featured)
     end
