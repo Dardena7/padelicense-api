@@ -1,5 +1,10 @@
 module Products
   class Search < BaseUseCase
+    NEWEST = "newest".freeze
+    PRICE_ASC = "price_asc".freeze
+    PRICE_DESC = "price_desc".freeze
+    NAME_ASC = "name_asc".freeze
+
     def initialize(scope:, filters: {})
       @scope = scope
       @category_slug = filters[:category_slug]
@@ -59,11 +64,11 @@ module Products
 
     def apply_order(products)
       case @order_by
-      when "price_asc"
+      when PRICE_ASC
         products.order(base_price_cents: :asc)
-      when "price_desc"
+      when PRICE_DESC
         products.order(base_price_cents: :desc)
-      when "name_asc"
+      when NAME_ASC
         products.i18n.order(:name)
       else
         products.order(created_at: :desc)
