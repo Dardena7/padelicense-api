@@ -1,8 +1,7 @@
 module Admin
   module Products
     class Create < BaseUseCase
-      def initialize(category:, attributes:)
-        @category = category
+      def initialize(attributes:)
         @attributes = attributes
       end
 
@@ -10,7 +9,7 @@ module Admin
 
       def call
         product = ::Product.new(
-          category: @category,
+          category: @attributes[:category],
           base_price_cents: @attributes[:base_price_cents],
           brand: @attributes[:brand],
           status: @attributes[:status] || ::Product::DRAFT,

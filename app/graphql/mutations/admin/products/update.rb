@@ -18,9 +18,9 @@ module Mutations
 
         def resolve(product:, attributes:)
           attrs = attributes.to_h
-          category = attrs[:category_id] ? GlobalID.find(attrs[:category_id]) : nil
+          attrs[:category] = GlobalID.find(attrs[:category_id]) if attrs[:category_id]
 
-          updated = ::Admin::Products::Update.run(product:, category:, attributes: attrs.except(:category_id))
+          updated = ::Admin::Products::Update.run(product:, attributes: attrs)
           { product: updated }
         end
       end

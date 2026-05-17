@@ -24,9 +24,8 @@ RSpec.describe Admin::Products::Update do
 
     described_class.run(
       product:,
-      category: new_category,
       attributes: {
-        translations:, base_price_cents: 25000,
+        translations:, base_price_cents: 25000, category: new_category,
         brand: "New", status: "active", featured: true
       }
     )

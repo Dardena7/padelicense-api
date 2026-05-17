@@ -1,16 +1,15 @@
 module Admin
   module Products
     class Update < BaseUseCase
-      def initialize(product:, category: nil, attributes:)
+      def initialize(product:, attributes:)
         @product = product
-        @category = category
         @attributes = attributes
       end
 
       private
 
       def call
-        @product.category = @category if @category
+        @product.category = @attributes[:category] if @attributes[:category]
         @product.base_price_cents = @attributes[:base_price_cents] if @attributes[:base_price_cents]
         @product.brand = @attributes[:brand] unless @attributes[:brand].nil?
         @product.status = @attributes[:status] if @attributes[:status]
