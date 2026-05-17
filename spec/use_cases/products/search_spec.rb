@@ -15,13 +15,13 @@ RSpec.describe Products::Search do
   end
 
   it "filters by category slug" do
-    result = described_class.run(scope: Product.all, category_slug: "rackets")
+    result = described_class.run(scope: Product.all, filters: { category_slug: "rackets" })
     expect(result).to include(active, featured, draft)
     expect(result).not_to include(other)
   end
 
   it "filters by featured" do
-    result = described_class.run(scope: Product.all, featured: true)
+    result = described_class.run(scope: Product.all, filters: { featured: true })
     expect(result).to eq([ featured ])
   end
 
@@ -31,13 +31,13 @@ RSpec.describe Products::Search do
   end
 
   it "combines filters" do
-    result = described_class.run(scope: Product.all, category_slug: "rackets", featured: true)
+    result = described_class.run(scope: Product.all, filters: { category_slug: "rackets", featured: true })
     expect(result).to eq([ featured ])
   end
 
   it "respects the scope (e.g. policy-filtered)" do
     active_scope = Product.where(status: "active")
-    result = described_class.run(scope: active_scope, category_slug: "rackets")
+    result = described_class.run(scope: active_scope, filters: { category_slug: "rackets" })
     expect(result).to include(active, featured)
     expect(result).not_to include(draft)
   end

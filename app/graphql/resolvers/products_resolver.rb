@@ -18,10 +18,10 @@ module Resolvers
       scope = ProductPolicy::Scope.new(context[:current_user], Product).resolve
 
       merged_filters = (filters&.to_h || {}).merge(
-        { status:, search:, order_by:, min_price:, max_price: }.compact
+        { category_slug:, featured:, status:, search:, order_by:, min_price:, max_price: }.compact
       )
 
-      Products::Search.run(scope:, category_slug:, featured:, filters: merged_filters)
+      Products::Search.run(scope:, filters: merged_filters)
     end
   end
 end

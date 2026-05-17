@@ -1,11 +1,9 @@
 module Products
   class Search < BaseUseCase
-    VALID_ORDER_BY = %w[newest price_asc price_desc name_asc].freeze
-
-    def initialize(scope:, filters: {}, category_slug: nil, featured: nil)
+    def initialize(scope:, filters: {})
       @scope = scope
-      @category_slug = category_slug
-      @featured = featured
+      @category_slug = filters[:category_slug]
+      @featured = filters[:featured]
       @status = filters[:status]
       @search = filters[:search]
       @order_by = filters[:order_by]
