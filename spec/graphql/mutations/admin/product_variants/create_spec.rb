@@ -26,7 +26,10 @@ RSpec.describe "adminCreateVariant mutation" do
     result = AppSchema.execute(
       mutation,
       variables: {
-        input: { productId: product_id, name: "Large", sku: "TEST-L", stockQuantity: 10 }
+        input: {
+          productId: product_id,
+          attributes: { name: "Large", sku: "TEST-L", stockQuantity: 10 }
+        }
       },
       context: { current_user: admin }
     )

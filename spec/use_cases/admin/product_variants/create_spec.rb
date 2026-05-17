@@ -4,7 +4,10 @@ RSpec.describe Admin::ProductVariants::Create do
   let(:product) { create(:product, category: create(:category)) }
 
   it "creates a variant" do
-    variant = described_class.run(product:, name: "Large", sku: "TEST-L", stock_quantity: 10)
+    variant = described_class.run(
+      product:,
+      attributes: { name: "Large", sku: "TEST-L", stock_quantity: 10 }
+    )
 
     expect(variant).to be_persisted
     expect(variant.name).to eq("Large")
@@ -14,7 +17,10 @@ RSpec.describe Admin::ProductVariants::Create do
   end
 
   it "creates with custom price" do
-    variant = described_class.run(product:, name: "Premium", sku: "TEST-P", price_cents: 35000)
+    variant = described_class.run(
+      product:,
+      attributes: { name: "Premium", sku: "TEST-P", price_cents: 35000 }
+    )
 
     expect(variant.price_cents).to eq(35000)
   end

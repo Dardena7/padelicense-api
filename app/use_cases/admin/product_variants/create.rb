@@ -1,22 +1,19 @@
 module Admin
   module ProductVariants
     class Create < BaseUseCase
-      def initialize(product:, name:, sku:, stock_quantity: 0, price_cents: nil)
+      def initialize(product:, attributes:)
         @product = product
-        @name = name
-        @sku = sku
-        @stock_quantity = stock_quantity
-        @price_cents = price_cents
+        @attributes = attributes
       end
 
       private
 
       def call
         @product.variants.create!(
-          name: @name,
-          sku: @sku,
-          stock_quantity: @stock_quantity,
-          price_cents: @price_cents
+          name: @attributes[:name],
+          sku: @attributes[:sku],
+          stock_quantity: @attributes[:stock_quantity] || 0,
+          price_cents: @attributes[:price_cents]
         )
       end
     end

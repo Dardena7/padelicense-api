@@ -1,21 +1,18 @@
 module Admin
   module ProductVariants
     class Update < BaseUseCase
-      def initialize(variant:, name: nil, sku: nil, stock_quantity: nil, price_cents: nil)
+      def initialize(variant:, attributes:)
         @variant = variant
-        @name = name
-        @sku = sku
-        @stock_quantity = stock_quantity
-        @price_cents = price_cents
+        @attributes = attributes
       end
 
       private
 
       def call
-        @variant.name = @name if @name
-        @variant.sku = @sku if @sku
-        @variant.stock_quantity = @stock_quantity if @stock_quantity
-        @variant.price_cents = @price_cents
+        @variant.name = @attributes[:name] if @attributes[:name]
+        @variant.sku = @attributes[:sku] if @attributes[:sku]
+        @variant.stock_quantity = @attributes[:stock_quantity] if @attributes[:stock_quantity]
+        @variant.price_cents = @attributes[:price_cents]
         @variant.save!
         @variant
       end
