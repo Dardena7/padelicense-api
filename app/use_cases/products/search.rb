@@ -7,63 +7,24 @@ module Products
 
     def initialize(scope:, filters: {})
       @scope = scope
-      @category_slug = filters[:category_slug]
-      @featured = filters[:featured]
-      @status = filters[:status]
-      @search = filters[:search]
-      @order_by = filters[:order_by]
-      @min_price = filters[:min_price]
-      @max_price = filters[:max_price]
+      @filters = filters
     end
 
     private
 
     def call
       products = @scope.includes(:category, :variants, :images)
-      products = filter_by_category(products)
-      products = filter_by_featured(products)
-      products = filter_by_status(products)
-      products = filter_by_search(products)
-      products = filter_by_price(products)
+      products = products.by_category(@filters[:category_slug]) if @filters[:category_slug]
+      products = products.featured if @filters[:featured]
+      products = products.by_status(@filters[:status]) if @filters[:status]
+      products = products.search_by_name(@filters[:search]) if @filters[:search].present?
+      products = products.min_price(@filters[:min_price]) if @filters[:min_price]
+      products = products.max_price(@filters[:max_price]) if @filters[:max_price]
       apply_order(products)
     end
 
-    def filter_by_category(products)
-      return products unless @category_slug
-
-      products.where(category: Category.i18n.where(slug: @category_slug))
-    end
-
-    def filter_by_featured(products)
-      return products unless @featured
-
-      products.where(featured: true)
-    end
-
-    def filter_by_status(products)
-      return products unless @status
-
-      products.where(status: @status)
-    end
-
-    def filter_by_search(products)
-      return products unless @search.present?
-
-      term = "%#{sanitize_search(@search)}%"
-      products.where(
-        "products.id IN (SELECT product_id FROM product_translations WHERE name ILIKE ?)",
-        term
-      )
-    end
-
-    def filter_by_price(products)
-      products = products.where("base_price_cents >= ?", @min_price) if @min_price
-      products = products.where("base_price_cents <= ?", @max_price) if @max_price
-      products
-    end
-
     def apply_order(products)
-      case @order_by
+      case @filters[:order_by]
       when PRICE_ASC
         products.order(base_price_cents: :asc)
       when PRICE_DESC
@@ -73,10 +34,6 @@ module Products
       else
         products.order(created_at: :desc)
       end
-    end
-
-    def sanitize_search(term)
-      term.gsub(/[%_\\]/) { |c| "\\#{c}" }
     end
   end
 end
