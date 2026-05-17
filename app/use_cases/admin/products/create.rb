@@ -17,7 +17,17 @@ module Admin
         )
         apply_translations(product)
         product.save!
+        create_default_variant(product)
         product
+      end
+
+      def create_default_variant(product)
+        slug = @attributes[:translations].first&.dig(:slug) || product.id.to_s
+        product.variants.create!(
+          name: "Default",
+          sku: "#{slug}-default",
+          stock_quantity: 0
+        )
       end
 
       def apply_translations(product)

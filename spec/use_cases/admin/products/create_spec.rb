@@ -36,4 +36,17 @@ RSpec.describe Admin::Products::Create do
     expect(product.featured).to be true
     expect(product.category).to eq(category)
   end
+
+  it "creates a default variant" do
+    product = described_class.run(
+      attributes: { translations:, base_price_cents: 19990, category: }
+    )
+
+    expect(product.variants.count).to eq(1)
+
+    variant = product.variants.first
+    expect(variant.name).to eq("Default")
+    expect(variant.sku).to eq("test-racket-default")
+    expect(variant.stock_quantity).to eq(0)
+  end
 end
