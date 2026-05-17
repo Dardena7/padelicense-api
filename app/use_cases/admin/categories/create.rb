@@ -9,7 +9,13 @@ module Admin
 
       private
 
+      class TooDeep < StandardError; end
+
       def call
+        if @parent && @parent.depth >= ::Category::MAX_DEPTH - 1
+          raise TooDeep, "Maximum category depth is #{::Category::MAX_DEPTH}"
+        end
+
         category = ::Category.new(parent: @parent, position: @position || next_position)
         apply_translations(category)
         category.save!

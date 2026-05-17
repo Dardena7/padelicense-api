@@ -8,6 +8,7 @@ Mobility.configure do
     query
     cache
     presence
+    # [LOCALE] Update fallbacks and locale_accessors when adding a new locale
     fallbacks({ fr: :en, nl: :en })
     locale_accessors [ :en, :fr, :nl ]
   end
