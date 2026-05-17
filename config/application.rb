@@ -51,6 +51,7 @@ module App
     config.api_only = true
     config.middleware.use ActionDispatch::Cookies
 
+    # [LOCALE] Update this list when adding a new locale
     config.i18n.available_locales = [ :en, :fr, :nl ]
     config.i18n.default_locale = :en
   end
