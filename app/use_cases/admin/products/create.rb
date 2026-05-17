@@ -1,13 +1,9 @@
 module Admin
   module Products
     class Create < BaseUseCase
-      def initialize(translations:, category:, base_price_cents:, brand: nil, status: nil, featured: false)
-        @translations = translations
+      def initialize(category:, attributes:)
         @category = category
-        @base_price_cents = base_price_cents
-        @brand = brand
-        @status = status || ::Product::DRAFT
-        @featured = featured
+        @attributes = attributes
       end
 
       private
@@ -15,10 +11,10 @@ module Admin
       def call
         product = ::Product.new(
           category: @category,
-          base_price_cents: @base_price_cents,
-          brand: @brand,
-          status: @status,
-          featured: @featured
+          base_price_cents: @attributes[:base_price_cents],
+          brand: @attributes[:brand],
+          status: @attributes[:status] || ::Product::DRAFT,
+          featured: @attributes[:featured] || false
         )
         apply_translations(product)
         product.save!
@@ -26,7 +22,7 @@ module Admin
       end
 
       def apply_translations(product)
-        @translations.each do |t|
+        @attributes[:translations].each do |t|
           I18n.with_locale(t[:locale]) do
             product.name = t[:name]
             product.slug = t[:slug]

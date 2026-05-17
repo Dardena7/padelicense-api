@@ -27,14 +27,16 @@ RSpec.describe "adminCreateProduct mutation" do
       mutation,
       variables: {
         input: {
-          categoryId: category_id,
-          basePriceCents: 19990,
-          brand: "Head",
-          translations: [
-            { locale: "EN", name: "Test Racket", slug: "test-racket" },
-            { locale: "FR", name: "Raquette Test", slug: "raquette-test" },
-            { locale: "NL", name: "Test NL", slug: "test-nl" }
-          ]
+          attributes: {
+            categoryId: category_id,
+            basePriceCents: 19990,
+            brand: "Head",
+            translations: [
+              { locale: "EN", name: "Test Racket", slug: "test-racket" },
+              { locale: "FR", name: "Raquette Test", slug: "raquette-test" },
+              { locale: "NL", name: "Test NL", slug: "test-nl" }
+            ]
+          }
         }
       },
       context: { current_user: admin }

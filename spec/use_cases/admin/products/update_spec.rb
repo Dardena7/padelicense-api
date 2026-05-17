@@ -12,7 +12,7 @@ RSpec.describe Admin::Products::Update do
   end
 
   it "updates translations" do
-    described_class.run(product:, translations:)
+    described_class.run(product:, attributes: { translations: })
 
     product.reload
     I18n.with_locale(:en) { expect(product.name).to eq("Updated") }
@@ -23,8 +23,12 @@ RSpec.describe Admin::Products::Update do
     new_category = create(:category)
 
     described_class.run(
-      product:, translations:,
-      category: new_category, base_price_cents: 25000, brand: "New", status: "active", featured: true
+      product:,
+      category: new_category,
+      attributes: {
+        translations:, base_price_cents: 25000,
+        brand: "New", status: "active", featured: true
+      }
     )
 
     product.reload

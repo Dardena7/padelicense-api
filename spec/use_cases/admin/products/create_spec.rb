@@ -11,7 +11,10 @@ RSpec.describe Admin::Products::Create do
   end
 
   it "creates a product with translations" do
-    product = described_class.run(translations:, category:, base_price_cents: 19990)
+    product = described_class.run(
+      category:,
+      attributes: { translations:, base_price_cents: 19990 }
+    )
 
     expect(product).to be_persisted
     expect(product.base_price_cents).to eq(19990)
@@ -23,8 +26,11 @@ RSpec.describe Admin::Products::Create do
 
   it "sets all attributes" do
     product = described_class.run(
-      translations:, category:, base_price_cents: 29990,
-      brand: "Head", status: "active", featured: true
+      category:,
+      attributes: {
+        translations:, base_price_cents: 29990,
+        brand: "Head", status: "active", featured: true
+      }
     )
 
     expect(product.brand).to eq("Head")
