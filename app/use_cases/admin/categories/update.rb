@@ -10,11 +10,9 @@ module Admin
 
       private
 
-      MAX_DEPTH = 3
-
       def call
-        if @parent
-          raise Create::TooDeep, "Maximum category depth is #{MAX_DEPTH}" if depth_of(@parent) >= MAX_DEPTH
+        if @parent && @parent.depth >= ::Category::MAX_DEPTH - 1
+          raise Create::TooDeep, "Maximum category depth is #{::Category::MAX_DEPTH}"
         end
 
         @category.parent = @parent
@@ -22,18 +20,6 @@ module Admin
         apply_translations
         @category.save!
         @category
-      end
-
-      def depth_of(category)
-        return 0 unless category
-
-        depth = 1
-        current = category
-        while current.parent
-          depth += 1
-          current = current.parent
-        end
-        depth
       end
 
       def apply_translations

@@ -17,9 +17,9 @@ module Mutations
 
         def resolve(attributes:)
           attrs = attributes.to_h
-          category = GlobalID.find(attrs.delete(:category_id))
+          category = GlobalID.find(attrs[:category_id])
 
-          product = ::Admin::Products::Create.run(category:, attributes: attrs)
+          product = ::Admin::Products::Create.run(category:, attributes: attrs.except(:category_id))
           { product: }
         end
       end
