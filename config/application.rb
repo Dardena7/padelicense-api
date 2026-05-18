@@ -54,5 +54,6 @@ module App
     # [LOCALE] Update this list when adding a new locale
     config.i18n.available_locales = [ :en, :fr, :nl ]
     config.i18n.default_locale = :en
+    config.i18n.fallbacks = true
   end
 end
