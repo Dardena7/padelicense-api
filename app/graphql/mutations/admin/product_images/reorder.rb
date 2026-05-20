@@ -5,20 +5,21 @@ module Mutations
         graphql_name "AdminReorderProductImages"
 
         argument :product_id, ID, required: true, loads: Types::ProductType
-        argument :image_ids, [ ID ], required: true
+        argument :image_ids, [ ID ], required: true, loads: Types::Product::ImageType, as: :images
 
         field :images, [ Types::Product::ImageType ], null: false
 
-        def authorized?(product:, image_ids:)
+        def authorized?(product:, images:)
           policy = AdminPolicy.new(context[:current_user], nil)
           raise GraphQL::ExecutionError, "Not authorized" unless policy.access?
 
           true
         end
 
-        def resolve(product:, image_ids:)
-          images = ::Admin::ProductImages::Reorder.run(product:, image_ids:)
-          { images: }
+        def resolve(product:, images:)
+          ordered_ids = images.map(&:id)
+          result = ::Admin::ProductImages::Reorder.run(product:, image_ids: ordered_ids)
+          { images: result }
         end
       end
     end

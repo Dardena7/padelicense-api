@@ -9,7 +9,8 @@ class ProductImage < ApplicationRecord
 
   def url
     if file.attached?
-      Rails.application.routes.url_helpers.rails_blob_url(file, only_path: true)
+      host = ENV.fetch("API_HOST", "http://localhost:3000")
+      "#{host}#{Rails.application.routes.url_helpers.rails_storage_proxy_path(file)}"
     else
       image_url
     end

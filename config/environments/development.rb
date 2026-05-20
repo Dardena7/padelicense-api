@@ -40,6 +40,9 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
+  # Active Storage needs this to generate absolute URLs for disk service
+  Rails.application.routes.default_url_options = { host: "localhost", port: 3000 }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
