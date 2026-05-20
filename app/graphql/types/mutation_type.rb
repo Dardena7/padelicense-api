@@ -20,5 +20,8 @@ module Types
     field :admin_create_variant, mutation: Mutations::Admin::ProductVariants::Create
     field :admin_update_variant, mutation: Mutations::Admin::ProductVariants::Update
     field :admin_delete_variant, mutation: Mutations::Admin::ProductVariants::Delete
+    field :admin_create_product_image, mutation: Mutations::Admin::ProductImages::Create
+    field :admin_delete_product_image, mutation: Mutations::Admin::ProductImages::Delete
+    field :admin_reorder_product_images, mutation: Mutations::Admin::ProductImages::Reorder
   end
 end
