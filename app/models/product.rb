@@ -11,8 +11,8 @@ class Product < ApplicationRecord
   translates :description
 
   belongs_to :category
-  has_many :variants, class_name: "ProductVariant", dependent: :destroy
   has_many :images, class_name: "ProductImage", dependent: :destroy
+  has_many :variants, class_name: "ProductVariant", dependent: :destroy
 
   enum :status, STATUSES.index_by(&:itself)
 
