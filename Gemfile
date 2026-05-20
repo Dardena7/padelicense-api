@@ -59,3 +59,5 @@ end
 gem "mobility", "~> 1.3"
 
 gem "stripe", "~> 19.1"
+
+gem "aws-sdk-s3", "~> 1.222"

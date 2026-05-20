@@ -7,6 +7,10 @@ module Types
       field :image_url, String, null: false
       field :position, Integer, null: false
       field :alt_text, String
+
+      def image_url
+        object.url
+      end
     end
   end
 end
