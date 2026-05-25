@@ -1,6 +1,6 @@
 class ProductPolicy < ApplicationPolicy
   def show?
-    record.active? || user&.admin?
+    !record.draft? || user&.admin?
   end
 
   def create?
