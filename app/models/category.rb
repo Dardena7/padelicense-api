@@ -16,7 +16,7 @@ class Category < ApplicationRecord
   validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
 
   def self_and_descendant_ids
-    ids = [id]
+    ids = [ id ]
     subcategories.each { |child| ids.concat(child.self_and_descendant_ids) }
     ids
   end
