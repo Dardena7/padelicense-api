@@ -21,7 +21,10 @@ class Product < ApplicationRecord
   validates :base_price_cents, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :status, presence: true
 
-  scope :by_category, ->(slug) { where(category: Category.i18n.where(slug:)) }
+  scope :by_category, ->(slug) {
+    category = Category.i18n.find_by(slug:)
+    category ? where(category_id: category.self_and_descendant_ids) : none
+  }
   scope :featured, -> { where(featured: true) }
   scope :by_status, ->(status) { where(status:) }
   scope :search_by_name, ->(term) {

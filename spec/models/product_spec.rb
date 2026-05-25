@@ -32,6 +32,19 @@ RSpec.describe Product do
         expect(result).to include(cheap, expensive, draft)
         expect(result).not_to include(other_cat)
       end
+
+      it "includes products from subcategories" do
+        child = create(:category, slug: "control", parent: category)
+        child_product = create(:product, name: "Child Product", category: child)
+
+        result = described_class.by_category("rackets")
+        expect(result).to include(child_product)
+      end
+
+      it "returns none for non-existent slug" do
+        result = described_class.by_category("non-existent")
+        expect(result).to be_empty
+      end
     end
 
     describe ".featured" do
