@@ -19,6 +19,7 @@ module Types
     field :me, resolver: Resolvers::MeResolver
     field :cart, resolver: Resolvers::CartResolver
     field :categories, resolver: Resolvers::CategoriesResolver
+    field :category, resolver: Resolvers::CategoryResolver
     field :product, resolver: Resolvers::ProductResolver
     field :products, resolver: Resolvers::ProductsResolver
     field :verify_cart, resolver: Resolvers::VerifyCartResolver
